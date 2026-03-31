@@ -502,96 +502,62 @@ ul { list-style: none; }
 }
 
 /* ══════════════════════════════════════
-   PRINT / PDF  —  US Letter portrait, 1 page
+   PRINT / PDF  —  Letter portrait, multi-page, respects theme
 ══════════════════════════════════════ */
 @media print {
-  @page { size: 8.5in 11in; margin: 0; }
+  @page { size: letter portrait; margin: 0.4in 0.35in; }
 
-  html { font-size: 7.5px; }
-  body { background: #fff !important; }
-
-  [data-theme="dark"] {
-    --bg: #fff; --surface: #fff; --surface-2: #F5F4F1;
-    --text-1: #111; --text-2: #444; --text-3: #888;
-    --border: #DDD; --border-light: #EEE; --rule: #CCC;
-    --tag-bg: #111; --tag-text: #fff;
-    --chip-bg: #F0EFE9; --chip-border: #DDD;
-    --card-shadow: none; --card-shadow-sm: none;
+  /* Force backgrounds & colors to print exactly as on screen */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* ── no clip, let content flow naturally to fill exactly 1 page ── */
+  /* Hide non-print elements */
   .no-print { display: none !important; }
-  .cv-page-wrapper { padding: 0; background: #fff; min-height: 0; }
-  .cv-page { width: 8.5in; max-width: none; gap: 0; }
 
+  /* Remove wrapper chrome, keep background from theme */
+  .cv-page-wrapper { padding: 0; min-height: 0; background: var(--bg); }
+  .cv-page { width: 100%; max-width: none; gap: 1px; }
+
+  /* Header */
   .cv-header {
     border-radius: 0; box-shadow: none;
-    padding: 8px 14px 6px;
-    border-bottom: 1px solid #DDD;
+    padding: 14px 18px 12px;
+    border-bottom: 1px solid var(--border);
   }
-  .name { font-size: 1.85rem; }
-  .title { margin-top: 2px; font-size: .66rem; }
-  .subtitle { font-size: .63rem; }
-  .contact-item { font-size: .66rem; gap: 5px; }
-  .contact-grid { gap: 2px; }
-  .ci-icon { width: 12px; height: 12px; }
 
-  .cv-body { grid-template-columns: 158px 1fr; gap: 0; }
-  .sidebar-card { border-radius: 0; box-shadow: none; padding: 6px 8px; border-right: 1px solid #E8E7E3; }
-  .main-card    { border-radius: 0; box-shadow: none; padding: 6px 11px; }
+  /* Body grid — natural width */
+  .cv-body { gap: 0; }
+  .sidebar-card {
+    border-radius: 0; box-shadow: none;
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+  }
+  .main-card {
+    border-radius: 0; box-shadow: none;
+    padding: 10px 16px;
+  }
 
-  .section-heading { margin-bottom: 4px; font-size: .52rem; letter-spacing: .12em; }
-  .section-heading::after { height: 1px; }
+  /* Prevent awkward page breaks */
+  .cv-header { break-inside: avoid; }
+  .job { break-inside: avoid; }
+  .achievements-grid { break-inside: avoid; }
+  .achievement-card { break-inside: avoid; }
+  .sidebar-card { break-inside: avoid; }
 
-  .tag { padding: 1px 5px; font-size: .56rem; }
-  .tag-grid { gap: 2px; }
-  .tool-list { gap: 3px; }
-  .tool-row { font-size: .62rem; gap: 4px; }
-  .tool-dot { width: 3px; height: 3px; }
-  .lang-list { gap: 4px; }
-  .lang-name { font-size: .65rem; }
-  .lang-badge { font-size: .52rem; padding: 1px 5px; }
-  .edu-list { gap: 5px; }
-  .edu-degree { font-size: .63rem; }
-  .edu-school { font-size: .58rem; }
-  .edu-year   { font-size: .54rem; }
-  .cert-list { gap: 4px; }
-  .cert-name  { font-size: .62rem; }
-  .cert-sub   { font-size: .54rem; }
-
-  .summary-text { font-size: .72rem; line-height: 1.3; margin-bottom: 3px; }
-  .summary-text:last-of-type { margin-bottom: 5px; }
-  .chip { padding: 2px 6px; font-size: .57rem; }
-  .chips { gap: 3px; }
-  .chip-icon { width: 9px; height: 9px; }
-
-  .job { margin-bottom: 4px; }
-  .job:last-child { margin-bottom: 0; }
-  .job-header { margin-bottom: 2px; }
-  .job-title { font-size: .78rem; }
-  .job-company { font-size: .67rem; margin-bottom: 3px; }
-  .job-dates { font-size: .61rem; }
-  .job-tenure { font-size: .55rem; }
-  .job-overview { font-size: .65rem; padding: 3px 7px; margin-bottom: 3px; line-height: 1.26; }
-  .job-progression { margin-bottom: 3px; gap: 3px; }
-  .prog-label { font-size: .51rem; }
-  .prog-step { padding: 1px 5px; font-size: .56rem; }
-  .job-bullets { gap: 1px; }
-  .job-bullets li { font-size: .66rem; line-height: 1.28; padding-left: 9px; }
-  .job-bullets li::before { font-size: .62rem; }
-  .job-divider { margin: 4px 0; }
-
-  .achievements-grid { gap: 3px; grid-template-columns: repeat(4, 1fr); }
-  .achievement-card { padding: 5px 4px; border-radius: 3px; }
+  /* Achievement cards always visible (override JS animation) */
   .achievement-card.card-enter,
   .achievement-card.card-visible { opacity: 1 !important; transform: none !important; }
+
+  /* Remove hover states */
   .achievement-card:hover { background: var(--surface-2); border-color: var(--border); }
   .achievement-card:hover .achievement-metric { color: var(--text-1); }
   .achievement-card:hover .achievement-label  { color: var(--text-3); }
-  .achievement-metric { font-size: .92rem; margin-bottom: 2px; }
-  .achievement-label  { font-size: .53rem; line-height: 1.18; }
 
+  /* Links & footer */
   a { color: inherit !important; text-decoration: none !important; }
+  .cv-footer { box-shadow: none; border-top: 1px solid var(--border); }
 }
 
 /* ══════════════════════════════════════
