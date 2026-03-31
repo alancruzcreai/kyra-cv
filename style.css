@@ -503,9 +503,11 @@ ul { list-style: none; }
 
 /* ══════════════════════════════════════
    PRINT / PDF  —  Letter portrait, multi-page, respects theme
+   Safari ignores @page size, so we force portrait by
+   constraining content width to 7.5in (letter minus margins).
 ══════════════════════════════════════ */
 @media print {
-  @page { size: letter portrait; margin: 0.4in 0.35in; }
+  @page { size: 8.5in 11in; margin: 0.5in; }
 
   /* Force backgrounds & colors to print exactly as on screen */
   *, *::before, *::after {
@@ -513,37 +515,69 @@ ul { list-style: none; }
     print-color-adjust: exact !important;
   }
 
+  /* ── Force portrait width (Safari fix) ── */
+  html {
+    width: 7.5in !important;
+    max-width: 7.5in !important;
+    overflow: visible !important;
+  }
+  body {
+    width: 7.5in !important;
+    max-width: 7.5in !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   /* Hide non-print elements */
   .no-print { display: none !important; }
 
   /* Remove wrapper chrome, keep background from theme */
-  .cv-page-wrapper { padding: 0; min-height: 0; background: var(--bg); }
-  .cv-page { width: 100%; max-width: none; gap: 1px; }
-
-  /* Header */
-  .cv-header {
-    border-radius: 0; box-shadow: none;
-    padding: 14px 18px 12px;
-    border-bottom: 1px solid var(--border);
+  .cv-page-wrapper {
+    padding: 0 !important; min-height: 0;
+    background: var(--bg);
+    width: 100% !important; max-width: 7.5in !important;
+  }
+  .cv-page {
+    width: 100% !important; max-width: 7.5in !important;
+    gap: 1px;
   }
 
-  /* Body grid — natural width */
-  .cv-body { gap: 0; }
+  /* Header — fit in portrait width */
+  .cv-header {
+    border-radius: 0; box-shadow: none;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .name { font-size: 2rem; }
+  .contact-item { font-size: .68rem; }
+  .ci-icon { width: 13px; height: 13px; }
+
+  /* Body grid — tighter sidebar for portrait */
+  .cv-body { grid-template-columns: 190px 1fr; gap: 0; }
   .sidebar-card {
     border-radius: 0; box-shadow: none;
-    padding: 10px 12px;
+    padding: 8px 10px;
     border-right: 1px solid var(--border);
   }
   .main-card {
     border-radius: 0; box-shadow: none;
-    padding: 10px 16px;
+    padding: 8px 14px;
   }
+
+  /* Slightly smaller text to fit portrait width comfortably */
+  .summary-text { font-size: .78rem; line-height: 1.4; }
+  .job-title { font-size: .88rem; }
+  .job-company { font-size: .73rem; }
+  .job-overview { font-size: .72rem; line-height: 1.35; }
+  .job-bullets li { font-size: .72rem; line-height: 1.38; }
+  .tag { font-size: .62rem; }
+  .chip { font-size: .65rem; }
 
   /* Prevent awkward page breaks */
   .cv-header { break-inside: avoid; }
   .job { break-inside: avoid; }
   .achievements-grid { break-inside: avoid; }
-  .achievement-card { break-inside: avoid; }
   .sidebar-card { break-inside: avoid; }
 
   /* Achievement cards always visible (override JS animation) */
