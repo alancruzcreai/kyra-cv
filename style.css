@@ -91,6 +91,26 @@ ul { list-style: none; }
 }
 .toolbar-actions { display: flex; gap: 8px; align-items: center; }
 
+.lang-switch {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 9px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font-body);
+  font-size: .72rem; font-weight: 600;
+  letter-spacing: .03em;
+  text-decoration: none;
+  cursor: pointer; transition: all .15s;
+  line-height: 1;
+}
+.lang-switch:hover {
+  background: var(--surface-2);
+  border-color: var(--text-3);
+  color: var(--text-1);
+}
+
 .btn-icon {
   width: 34px; height: 34px;
   display: flex; align-items: center; justify-content: center;
